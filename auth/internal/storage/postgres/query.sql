@@ -1,4 +1,4 @@
 -- name: CreateUser :one
-insert into user.user (id, name, email, created_at)
+insert into "user" (id, name, email, created_at)
 values ($1, $2, $3, $4)
     returning id, name, email, created_at;

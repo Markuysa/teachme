@@ -1,7 +1,9 @@
 package config
 
-import "github.com/Markuysa/pkg/redis"
+import (
+	"github.com/Markuysa/pkg/postgres"
+)
 
 type Config struct {
-	Redis redis.Config
+	Postgres postgres.PgxPoolCfg
 }
