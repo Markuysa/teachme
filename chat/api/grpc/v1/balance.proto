@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package balance.v1;
+
+option go_package = "/v1";
+
+service AuthService {
+  rpc ClientPrepareSignIn(ClientPrepareSignInRequest) returns (ClientPrepareSignInResponse) {}
+  rpc ClientSignInConfirm(ClientSignInConfirmRequest) returns (ClientSignInConfirmResponse) {}
+
+  rpc ClientSignUp(ClientSignUpRequest) returns (ClientSignUpResponse) {}
+  rpc ClientSignUpFinalize(ClientSignUpFinalizeRequest) returns (ClientSignUpFinalizeResponse) {}
+
+  rpc ClientSignOut(ClientSignOutRequest) returns (ClientSignOutResponse) {}
+}
+
+message ClientPrepareSignInRequest {
+  string email = 1;
+}
+
+message ClientPrepareSignInResponse {
+  string user_id = 1;
+  string session_id = 2;
+}
+
+message ClientSignInConfirmRequest {
+  string user_id = 1;
+  string session_id = 2;
+}
+
+message ClientSignInConfirmResponse {}
+
+message ClientSignUpRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message ClientSignUpResponse {
+  string user_id = 1;
+  string session_id = 2;
+}
+
+message ClientSignUpFinalizeRequest {
+  string user_id = 1;
+  string session_id = 2;
+}
+
+message ClientSignUpFinalizeResponse {}
+
+message ClientSignOutRequest {
+  string user_id = 1;
+  string session_id = 2;
+}
+
+message ClientSignOutResponse {}
