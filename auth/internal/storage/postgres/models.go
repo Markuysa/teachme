@@ -10,7 +10,7 @@ import (
 
 type User struct {
 	ID        pgtype.UUID
-	Name      string
+	Login     string
 	Email     string
 	CreatedAt pgtype.Timestamp
 }

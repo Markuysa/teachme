@@ -1,9 +1,30 @@
 package postgres
 
-import "context"
+import (
+	"context"
 
-type conn struct {
-	queries *Queries
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+type (
+	Conn interface {
+		Queries(ctx context.Context) *Queries
+		//WithTx(ctx context.Context, txFunc func(ctx context.Context) error) error
+	}
+
+	conn struct {
+		conn    *pgxpool.Pool
+		queries *Queries
+	}
+)
+
+func NewConn(
+	pool *pgxpool.Pool,
+) *conn {
+	return &conn{
+		conn:    pool,
+		queries: New(pool),
+	}
 }
 
 func (t *conn) Queries(ctx context.Context) *Queries {

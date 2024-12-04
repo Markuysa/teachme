@@ -12,14 +12,14 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-insert into "user" (id, name, email, created_at)
+insert into "user" (id, login, email, created_at)
 values ($1, $2, $3, $4)
-    returning id, name, email, created_at
+    returning id, login, email, created_at
 `
 
 type CreateUserParams struct {
 	ID        pgtype.UUID
-	Name      string
+	Login     string
 	Email     string
 	CreatedAt pgtype.Timestamp
 }
@@ -27,14 +27,14 @@ type CreateUserParams struct {
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
 	row := q.db.QueryRow(ctx, createUser,
 		arg.ID,
-		arg.Name,
+		arg.Login,
 		arg.Email,
 		arg.CreatedAt,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Name,
+		&i.Login,
 		&i.Email,
 		&i.CreatedAt,
 	)

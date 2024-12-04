@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -14,6 +15,7 @@ const (
 )
 
 func main() {
+	ctx := context.Background()
 	onBuild()
 
 	cfgPath := os.Getenv(cfgPathKey)
@@ -24,7 +26,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err = app.Run(cfg); err != nil {
+	if err = app.Run(ctx, cfg); err != nil {
 		log.Fatal(err)
 	}
 }
