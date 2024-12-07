@@ -1,7 +1,8 @@
 package client
 
 type service struct {
-	repos repository
+	sessionExpiredTime int64
+	repos              repository
 }
 
 func New(repos repository) *service {

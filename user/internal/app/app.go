@@ -1,24 +1,36 @@
 package app
 
 import (
-	"log"
-	"net"
+	"context"
+	"os"
+	"os/signal"
+	"syscall"
 
+	"github.com/Markuysa/pkg/logger"
+	"github.com/Markuysa/pkg/postgres"
 	"gitlab.com/coinhubs/balance/internal/config"
-	"google.golang.org/grpc"
+	closerPkg "gitlab.com/coinhubs/balance/pkg/closer"
 )
 
-func Run(cfg *config.Config) error {
-	listener, err := net.Listen("tcp", ":5000")
+func Run(_ context.Context, cfg *config.Config) error {
+	closer := closerPkg.New()
+
+	err := logger.InitLogger(cfg.Logger)
 	if err != nil {
 		return err
 	}
 
-	go func() {
-		if err := grpc.NewServer().Serve(listener); err != nil {
-			log.Fatal(err)
-		}
-	}()
+	pgConn, err := postgres.New(cfg.Postgres)
+	if err != nil {
+		return err
+	}
+	closer.AddCloser(pgConn.Close)
+
+	quitCh := make(chan os.Signal, 1)
+	signal.Notify(quitCh, os.Interrupt, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+	<-quitCh
+
+	closer.Close()
 
 	return nil
 }

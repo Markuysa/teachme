@@ -5,9 +5,10 @@ import (
 	"log"
 	"os"
 
+	"session/internal/app"
+	"session/internal/config"
+
 	cfgLoader "github.com/Markuysa/pkg/config"
-	"gitlab.com/coinhubs/balance/internal/app"
-	"gitlab.com/coinhubs/balance/internal/config"
 )
 
 const (
