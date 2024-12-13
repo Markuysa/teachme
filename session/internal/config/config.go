@@ -1,13 +1,16 @@
 package config
 
 import (
+	"session/internal/service/client"
+
 	"github.com/Markuysa/pkg/logger"
 	"github.com/Markuysa/pkg/redis"
 	"github.com/Markuysa/pkg/srv/grpc"
 )
 
 type Config struct {
-	Redis  redis.Config
-	Logger logger.Config
-	GRPC   grpc.Config
+	ClientSession client.Config `yaml:"client_session"`
+	Redis         redis.Config  `yaml:"redis"`
+	Logger        logger.Config `yaml:"logger"`
+	GRPC          grpc.Config   `yaml:"grpc"`
 }

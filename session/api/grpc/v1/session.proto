@@ -15,7 +15,9 @@ message ClientSetSessionRequest {
   string client_id = 1;
 }
 
-message ClientSetSessionResponse {}
+message ClientSetSessionResponse {
+  string access_token = 1;
+}
 
 message ClientAuthRequest {
   string client_secret = 2;

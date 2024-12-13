@@ -1,12 +1,16 @@
 package client
 
 type service struct {
-	sessionExpiredTime int64
-	repos              repository
+	cfg   Config
+	repos repository
 }
 
-func New(repos repository) *service {
+func New(
+	cfg Config,
+	repos repository,
+) *service {
 	return &service{
+		cfg:   cfg,
 		repos: repos,
 	}
 }

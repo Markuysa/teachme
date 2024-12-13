@@ -23,12 +23,12 @@ func (r *repo) SetClientSession(ctx context.Context, session *v1.Session) error 
 	ctx, span, _ := tracer.NewSpan(ctx)
 	defer span.Finish()
 
-	return nil
+	return r.storage.SetClientSession(ctx, session)
 }
 
 func (r *repo) FindSessionByAccessToken(ctx context.Context, accessToken string) (*v1.Session, error) {
 	ctx, span, _ := tracer.NewSpan(ctx)
 	defer span.Finish()
 
-	return nil, nil
+	return r.storage.FindSessionByAccessToken(ctx, accessToken)
 }

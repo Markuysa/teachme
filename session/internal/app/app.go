@@ -32,7 +32,10 @@ func Run(_ context.Context, cfg *config.Config) error {
 	closer.AddErrCloser(rdConn.Close)
 
 	sessionsRepository := clientRepos.New(rdConn)
-	sessionService := clientService.New(sessionsRepository)
+	sessionService := clientService.New(
+		cfg.ClientSession,
+		sessionsRepository,
+	)
 
 	grpcTransport := client.New(sessionService)
 
@@ -47,7 +50,7 @@ func Run(_ context.Context, cfg *config.Config) error {
 	}
 	closer.AddCloser(grpc.GracefulStop)
 
-	// TODO add serve of grpc.
+	logger.Logger.Info("started app")
 
 	quitCh := make(chan os.Signal, 1)
 	signal.Notify(quitCh, os.Interrupt, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)

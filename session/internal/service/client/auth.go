@@ -2,8 +2,6 @@ package client
 
 import (
 	"context"
-	"fmt"
-
 	v1 "session/pkg/api/grpc/v1"
 
 	"github.com/Markuysa/pkg/tracer"
@@ -18,7 +16,7 @@ func (s *service) CreateSession(ctx context.Context, req *v1.ClientSetSessionReq
 	session := &v1.Session{
 		Id:           uuid.NewString(),
 		UserId:       req.ClientId,
-		ExpireIn:     s.sessionExpiredTime,
+		ExpireIn:     s.cfg.SessionExpireTime.Milliseconds(),
 		AccessToken:  uuid.NewString(),
 		RefreshToken: uuid.NewString(),
 		SignedAt:     timestamppb.Now(),
@@ -26,10 +24,12 @@ func (s *service) CreateSession(ctx context.Context, req *v1.ClientSetSessionReq
 
 	err := s.repos.SetClientSession(ctx, session)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create session: %w", err)
+		return nil, err
 	}
 
-	return &v1.ClientSetSessionResponse{}, nil
+	return &v1.ClientSetSessionResponse{
+		AccessToken: session.GetAccessToken(),
+	}, nil
 }
 
 func (s *service) ClientAuthorize(ctx context.Context, req *v1.ClientAuthRequest) (*v1.ClientAuthResponse, error) {
@@ -38,11 +38,7 @@ func (s *service) ClientAuthorize(ctx context.Context, req *v1.ClientAuthRequest
 
 	session, err := s.repos.FindSessionByAccessToken(ctx, req.GetClientSecret())
 	if err != nil {
-		return nil, fmt.Errorf("failed to find session by access token: %w", err)
-	}
-
-	if session == nil {
-		return nil, fmt.Errorf("session not found")
+		return nil, err
 	}
 
 	return &v1.ClientAuthResponse{

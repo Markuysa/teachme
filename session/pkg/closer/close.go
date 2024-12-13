@@ -32,4 +32,6 @@ func (c *closer) Close() error {
 			return err
 		}
 	}
+
+	return nil
 }

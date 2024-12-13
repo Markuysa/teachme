@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"fmt"
+	"session/pkg/errlist"
 	"time"
 
 	v1 "session/pkg/api/grpc/v1"
@@ -47,23 +48,43 @@ func (c *cache) FindSessionByAccessToken(ctx context.Context, accessToken string
 	ctx, span, _ := tracer.NewSpan(ctx)
 	defer span.Finish()
 
-	result, err := c.rd.Eval(
-		ctx,
-		fetchUserSessionScript,
-		[]string{},
-		accessToken,
-	).Result()
-	if err != nil {
-		return nil, err
+	pattern := fmt.Sprintf("session:%s:*", accessToken)
+
+	var cursor uint64
+	var session *v1.Session
+
+	for {
+		keys, nextCursor, err := c.rd.Scan(ctx, cursor, pattern, 100).Result()
+		if err != nil {
+			return nil, err
+		}
+
+		for _, key := range keys {
+			result, err := c.rd.Get(ctx, key).Result()
+			if err != nil {
+				return nil, err
+			}
+
+			tempSession := &v1.Session{}
+			if err := proto.Unmarshal([]byte(result), tempSession); err != nil {
+				return nil, err
+			}
+
+			if tempSession.GetAccessToken() == accessToken {
+				session = tempSession
+				break
+			}
+		}
+
+		if session != nil || nextCursor == 0 {
+			break
+		}
+
+		cursor = nextCursor
 	}
 
-	if result == nil {
-		return nil, fmt.Errorf("session not found")
-	}
-
-	session := &v1.Session{}
-	if err := proto.Unmarshal([]byte(result.(string)), session); err != nil {
-		return nil, err
+	if session == nil {
+		return nil, errlist.ErrUnauthorized
 	}
 
 	return session, nil
