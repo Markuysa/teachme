@@ -3,7 +3,7 @@ module session
 go 1.23.2
 
 require (
-	github.com/Markuysa/pkg v1.2.12
+	github.com/Markuysa/pkg v1.2.13
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/prometheus/client_golang v1.20.5

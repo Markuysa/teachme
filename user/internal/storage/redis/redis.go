@@ -1,11 +1,25 @@
 package redis
 
-import "github.com/redis/go-redis/v9"
+import (
+	"context"
+	"time"
 
-type cache struct {
+	"github.com/redis/go-redis/v9"
+)
+
+type redisStorage struct {
 	rd *redis.Client
 }
 
-func NewCache(rd *redis.Client) *cache {
-	return &cache{rd: rd}
+func NewStorage(rd *redis.Client) *redisStorage {
+	return &redisStorage{rd: rd}
+}
+
+func (r *redisStorage) Save(
+	ctx context.Context,
+	key string,
+	value interface{},
+	ttl time.Duration,
+) error {
+	return r.rd.Set(ctx, key, value, ttl).Err()
 }

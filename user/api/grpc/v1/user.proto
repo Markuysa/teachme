@@ -14,10 +14,12 @@ service UserService {
 message SignUpInitRequest {
   string email = 1;
   string password = 2;
+  string login = 3;
 }
 
 message SignUpInitResponse {
   string token = 1;
+  int64  token_lifetime = 2;
 }
 
 message SignUpFinalizeRequest {
@@ -25,7 +27,9 @@ message SignUpFinalizeRequest {
   string verification_code = 2;
 }
 
-message SignUpFinalizeResponse {}
+message SignUpFinalizeResponse {
+  string session_id = 1;
+}
 
 message SignInInitRequest {
   string email = 1;

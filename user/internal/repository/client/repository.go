@@ -7,17 +7,24 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+	redisCli "github.com/redis/go-redis/v9"
 	"gitlab.com/coinhubs/balance/internal/domain"
 	"gitlab.com/coinhubs/balance/internal/storage/postgres"
+	"gitlab.com/coinhubs/balance/internal/storage/redis"
 )
 
 type repository struct {
-	pgConn postgres.Conn
+	pgConn postgresStorage
+	redis  redisStorage
 }
 
-func New(pool *pgxpool.Pool) *repository {
+func New(
+	pool *pgxpool.Pool,
+	redisClient *redisCli.Client,
+) *repository {
 	return &repository{
-		pgConn: postgres.NewConn(pool),
+		pgConn: postgres.NewStorage(pool),
+		redis:  redis.NewStorage(redisClient),
 	}
 }
 
@@ -35,4 +42,12 @@ func (r *repository) CreateUser(ctx context.Context, user domain.User) (created 
 	}
 
 	return userFromRepository(pgUser), nil
+}
+
+func (r *repository) SaveEmailConfirmationCode(
+	ctx context.Context,
+	key string,
+	code int,
+) error {
+	return r.redis.Save(ctx, key, code, time.Hour)
 }

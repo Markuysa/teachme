@@ -6,31 +6,41 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Markuysa/pkg/closer"
 	"github.com/Markuysa/pkg/logger"
 	"github.com/Markuysa/pkg/postgres"
+	"github.com/Markuysa/pkg/srv/grpc"
 	"gitlab.com/coinhubs/balance/internal/config"
-	closerPkg "gitlab.com/coinhubs/balance/pkg/closer"
 )
 
 func Run(_ context.Context, cfg *config.Config) error {
-	closer := closerPkg.New()
+	cl := closer.New()
 
 	err := logger.InitLogger(cfg.Logger)
 	if err != nil {
 		return err
 	}
 
-	pgConn, err := postgres.New(cfg.Postgres)
+	pg, err := postgres.New(cfg.Postgres)
 	if err != nil {
 		return err
 	}
-	closer.AddCloser(pgConn.Close)
+	cl.AddCloser(pg.Close)
+
+	grpc, err := grpc.NewServer(
+		grpc.WithConfig(&cfg.GRPC),
+		grpc.WithRegistes(),
+	)
+	if err != nil {
+		return err
+	}
+	cl.AddCloser(grpc.GracefulStop)
+
+	logger.Logger.Info("started app")
 
 	quitCh := make(chan os.Signal, 1)
 	signal.Notify(quitCh, os.Interrupt, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
 	<-quitCh
 
-	closer.Close()
-
-	return nil
+	return cl.Close()
 }

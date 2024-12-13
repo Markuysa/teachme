@@ -18,7 +18,7 @@ type (
 	}
 )
 
-func NewConn(
+func NewStorage(
 	pool *pgxpool.Pool,
 ) *conn {
 	return &conn{
