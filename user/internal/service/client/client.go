@@ -1,11 +1,17 @@
 package client
 
 type service struct {
-	repos repository
+	cfg            Config
+	repos          repository
+	sessionStorage sessionStorage
 }
 
-func New(repos repository) *service {
+func New(
+	cfg Config,
+	repos repository,
+) *service {
 	return &service{
+		cfg:   cfg,
 		repos: repos,
 	}
 }

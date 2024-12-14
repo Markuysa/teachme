@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	v1 "session/pkg/api/grpc/v1"
+	v1 "github.com/teachme-group/session/pkg/api/grpc/v1"
 
 	"github.com/Markuysa/pkg/errs"
 	"github.com/Markuysa/pkg/tracer"

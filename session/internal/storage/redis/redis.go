@@ -3,10 +3,11 @@ package redis
 import (
 	"context"
 	"fmt"
-	"session/pkg/errlist"
 	"time"
 
-	v1 "session/pkg/api/grpc/v1"
+	"github.com/teachme-group/session/pkg/errlist"
+
+	v1 "github.com/teachme-group/session/pkg/api/grpc/v1"
 
 	"github.com/Markuysa/pkg/tracer"
 	"github.com/redis/go-redis/v9"

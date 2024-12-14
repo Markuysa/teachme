@@ -1,6 +1,10 @@
-module session
+module github.com/teachme-group/session
 
 go 1.23.2
+
+replace (
+	github.com/teachme-group/session/pkg => ./pkg
+)
 
 require (
 	github.com/Markuysa/pkg v1.2.13

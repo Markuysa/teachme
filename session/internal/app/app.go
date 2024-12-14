@@ -6,11 +6,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"session/internal/config"
-	clientRepos "session/internal/repository/client"
-	clientService "session/internal/service/client"
-	"session/internal/transport/client"
-	closerPkg "session/pkg/closer"
+	"github.com/teachme-group/session/internal/config"
+	clientRepos "github.com/teachme-group/session/internal/repository/client"
+	clientService "github.com/teachme-group/session/internal/service/client"
+	"github.com/teachme-group/session/internal/transport/client"
+	closerPkg "github.com/teachme-group/session/pkg/closer"
 
 	"github.com/Markuysa/pkg/logger"
 	"github.com/Markuysa/pkg/redis"

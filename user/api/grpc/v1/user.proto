@@ -15,15 +15,16 @@ message SignUpInitRequest {
   string email = 1;
   string password = 2;
   string login = 3;
+  string sign_up_token = 4;
 }
 
 message SignUpInitResponse {
-  string token = 1;
-  int64  token_lifetime = 2;
+  string sign_up_token = 1;
+  int64  sign_up_session_lifetime = 3;
 }
 
 message SignUpFinalizeRequest {
-  string token = 1;
+  string sign_up_token = 1;
   string verification_code = 2;
 }
 

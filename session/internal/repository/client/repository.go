@@ -2,8 +2,9 @@ package client
 
 import (
 	"context"
-	rd "session/internal/storage/redis"
-	v1 "session/pkg/api/grpc/v1"
+
+	rd "github.com/teachme-group/session/internal/storage/redis"
+	v1 "github.com/teachme-group/session/pkg/api/grpc/v1"
 
 	"github.com/Markuysa/pkg/tracer"
 	"github.com/redis/go-redis/v9"

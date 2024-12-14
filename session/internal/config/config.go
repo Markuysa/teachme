@@ -1,7 +1,7 @@
 package config
 
 import (
-	"session/internal/service/client"
+	"github.com/teachme-group/session/internal/service/client"
 
 	"github.com/Markuysa/pkg/logger"
 	"github.com/Markuysa/pkg/redis"

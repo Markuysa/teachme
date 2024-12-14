@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"session/internal/app"
-	"session/internal/config"
+	"github.com/teachme-group/session/internal/app"
+	"github.com/teachme-group/session/internal/config"
 
 	cfgLoader "github.com/Markuysa/pkg/config"
 )
